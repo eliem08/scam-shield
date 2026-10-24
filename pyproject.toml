@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scam-shield"
+version = "0.1.0"
+description = "Norton for AI scams: protect your parents from fake voices and emails"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = []
+
+[project.scripts]
+scam-shield = "scam_shield.__main__:main"
+
+[tool.setuptools]
+packages = ["scam_shield"]
