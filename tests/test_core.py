@@ -5,7 +5,9 @@ from scam_shield import analyze, hash_safeword, lookalike, verify_safeword
 
 class Tests(unittest.TestCase):
     def test_grandparent_scam(self):
-        v = analyze("Grandma it's me, I'm in jail. Please don't tell mom. I need bail money in Apple gift cards right away.")
+        v = analyze(
+            "Grandma it's me, I'm in jail. Please don't tell mom. I need bail money in Apple gift cards right away."
+        )
         self.assertEqual(v.label, "likely scam")
         names = {s.name for s in v.signals}
         self.assertTrue({"family_emergency", "secrecy", "gift_cards", "urgency"} <= names)
@@ -24,8 +26,10 @@ class Tests(unittest.TestCase):
         self.assertEqual(lookalike("xn--pypal-4ve.com"), "punycode")
 
     def test_phishing_email(self):
-        v = analyze("Suspicious activity on your account. Verify your account: [paypal.com](http://198.51.100.7/login)",
-                    sender="security@paypa1.com")
+        v = analyze(
+            "Suspicious activity on your account. Verify your account: [paypal.com](http://198.51.100.7/login)",
+            sender="security@paypa1.com",
+        )
         names = {s.name for s in v.signals}
         self.assertTrue({"lookalike_domain", "link_mismatch", "raw_ip_link", "credential_request"} <= names)
         self.assertEqual(v.score, 100)

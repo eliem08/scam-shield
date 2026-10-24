@@ -1,4 +1,5 @@
 """Explainable scam detection for messages and call transcripts, plus family safe words."""
+
 from __future__ import annotations
 
 import hashlib
@@ -10,18 +11,54 @@ from urllib.parse import urlparse
 
 __all__ = ["Signal", "Verdict", "analyze", "lookalike", "hash_safeword", "verify_safeword", "BRANDS"]
 
-BRANDS = ["paypal", "amazon", "apple", "microsoft", "google", "netflix", "chase", "wellsfargo", "bankofamerica",
-          "irs", "ssa", "fedex", "ups", "usps", "dhl", "coinbase", "venmo", "zelle", "facebook", "instagram"]
+BRANDS = [
+    "paypal",
+    "amazon",
+    "apple",
+    "microsoft",
+    "google",
+    "netflix",
+    "chase",
+    "wellsfargo",
+    "bankofamerica",
+    "irs",
+    "ssa",
+    "fedex",
+    "ups",
+    "usps",
+    "dhl",
+    "coinbase",
+    "venmo",
+    "zelle",
+    "facebook",
+    "instagram",
+]
 SHORTENERS = {"bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd", "cutt.ly", "rb.gy"}
 
 RULES = [
     ("urgency", 15, r"\b(act now|immediately|urgent|within 24 hours|right away|final notice|expires today|asap)\b"),
     ("secrecy", 20, r"\b(don'?t tell|keep this between us|do not tell|don'?t call (mom|dad|anyone)|keep it secret)\b"),
     ("gift_cards", 30, r"\b(gift ?cards?|itunes card|google play card|steam card)\b"),
-    ("untraceable_payment", 25, r"\b(wire (the )?money|western union|moneygram|bitcoin|crypto|usdt|zelle|cash app|courier will pick up)\b"),
-    ("family_emergency", 25, r"\b(it'?s me,? (grandma|grandpa|mom|dad)|grandma,? it'?s me|i'?m in jail|bail money|i had an accident|i'?m in trouble|this is my new number)\b"),
-    ("authority", 20, r"\b(irs|social security|warrant for your arrest|police department|fraud department|tax debt|medicare)\b"),
-    ("credential_request", 25, r"\b(verify your (account|identity)|confirm your password|read me the code|one[- ]time code|send me the code|login details|ssn)\b"),
+    (
+        "untraceable_payment",
+        25,
+        r"\b(wire (the )?money|western union|moneygram|bitcoin|crypto|usdt|zelle|cash app|courier will pick up)\b",
+    ),
+    (
+        "family_emergency",
+        25,
+        r"\b(it'?s me,? (grandma|grandpa|mom|dad)|grandma,? it'?s me|i'?m in jail|bail money|i had an accident|i'?m in trouble|this is my new number)\b",
+    ),
+    (
+        "authority",
+        20,
+        r"\b(irs|social security|warrant for your arrest|police department|fraud department|tax debt|medicare)\b",
+    ),
+    (
+        "credential_request",
+        25,
+        r"\b(verify your (account|identity)|confirm your password|read me the code|one[- ]time code|send me the code|login details|ssn)\b",
+    ),
     ("prize", 15, r"\b(you('ve| have)? won|lottery|claim your prize|inheritance|beneficiary)\b"),
     ("refund_lure", 10, r"\b(refund|overpaid|unauthorized charge|suspicious activity on your account)\b"),
 ]
@@ -82,7 +119,10 @@ def lookalike(domain: str) -> str | None:
     return None
 
 
-LINK_RE = re.compile(r"\[([^\]]+)\]\((https?://[^)\s]+)\)|<a [^>]*href=[\"'](https?://[^\"']+)[\"'][^>]*>([^<]+)</a>|(https?://[^\s)>\"']+)", re.I)
+LINK_RE = re.compile(
+    r"\[([^\]]+)\]\((https?://[^)\s]+)\)|<a [^>]*href=[\"'](https?://[^\"']+)[\"'][^>]*>([^<]+)</a>|(https?://[^\s)>\"']+)",
+    re.I,
+)
 
 
 def _links(text):

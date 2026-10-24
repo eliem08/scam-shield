@@ -30,7 +30,11 @@ def main(argv=None):
             print("No safe word set.", file=sys.stderr)
             return 1
         ok = verify_safeword(a.word, STORE.read_text())
-        print("MATCH - this is likely really your family member." if ok else "NO MATCH - treat this caller as a possible scam.")
+        print(
+            "MATCH - this is likely really your family member."
+            if ok
+            else "NO MATCH - treat this caller as a possible scam."
+        )
         return 0 if ok else 2
 
     text = pathlib.Path(a.file).read_text(encoding="utf-8") if a.file else (a.text or sys.stdin.read())

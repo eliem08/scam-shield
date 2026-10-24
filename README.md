@@ -1,5 +1,7 @@
 # scam-shield
 
+[![CI](https://github.com/eliem08/scam-shield/actions/workflows/ci.yml/badge.svg)](https://github.com/eliem08/scam-shield/actions/workflows/ci.yml)
+
 > **Norton for AI scams** — protect your parents from fake voices and emails.
 
 Voice clones of a grandchild "in jail", perfectly written phishing emails,
@@ -35,3 +37,25 @@ scam-shield safeword set "purple pancakes" && scam-shield safeword verify "purpl
 - Call screening: live transcript scoring + "ask for the safe word" prompt
 - Family dashboard: alerts to adult children when a high-risk message arrives
 - Deepfake-voice artefact detection on recordings
+
+## Development
+
+Zero runtime dependencies; Python 3.10+.
+
+```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+python -m unittest discover -s tests -t .           # unit + CLI smoke tests
+ruff check . && ruff format --check .               # lint + format
+```
+
+```
+scam_shield/core.py       domain logic (pure, importable, fully tested)
+scam_shield/__main__.py   CLI (`scam-shield ...` / `python -m scam_shield ...`)
+tests/                unit tests + generated CLI smoke tests
+```
+
+CI runs lint and tests on Ubuntu and Windows across Python 3.10, 3.12 and 3.13.
+Design, data model, trade-offs and production path: **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+
+Part of the [agent-economy](https://github.com/eliem08/agent-economy) portfolio (idea #14).
