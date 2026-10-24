@@ -61,7 +61,7 @@ def _lev(a: str, b: str) -> int:
     return prev[-1]
 
 
-HOMOGLYPHS = str.maketrans({"0": "o", "1": "l", "3": "e", "5": "s", "rn": "m"} if False else {"0": "o", "1": "l", "3": "e", "5": "s", "4": "a"})
+HOMOGLYPHS = str.maketrans({"0": "o", "1": "l", "3": "e", "5": "s", "4": "a"})
 
 
 def lookalike(domain: str) -> str | None:
