@@ -46,7 +46,7 @@ Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless
 | **Family** | $9 per month | Up to 6 people; Shared safe word; Plain-language advice |
 | **Care Partner** | $199 per month | For banks, clinics and care homes; Bulk checks; Priority support |
 
-To start a trial or buy a plan, email **sales@YOUR-DOMAIN.com**.
+To start a trial or buy a plan, [request access](https://github.com/eliem08/scam-shield/issues/new?title=Scam%20Shield%20trial&labels=sales).
 
 ## Licence
 
