@@ -39,6 +39,30 @@ class Tests(unittest.TestCase):
         self.assertTrue(verify_safeword("purple pancakes ", h))
         self.assertFalse(verify_safeword("blue waffles", h))
 
+    def test_cheap_text_evasions_are_undone(self):
+        smart_quotes = "Grandma it\u2019s me, I\u2019m in jail. Don\u2019t tell mom."
+        self.assertEqual({s.name for s in analyze(smart_quotes).signals}, {"family_emergency", "secrecy"})
+        for text in (
+            "buy gift\u200bcards now",
+            "\uff47\uff49\uff46\uff54 \uff43\uff41\uff52\uff44\uff53",
+            "GIFT\u00adCARDS",
+        ):
+            with self.subTest(text=text.encode("unicode_escape")):
+                self.assertIn("gift_cards", {s.name for s in analyze(text).signals})
+
+    def test_brand_hidden_in_subdomain_or_country_suffix(self):
+        self.assertEqual(lookalike("paypal.com.secure-login.ru"), "paypal")
+        self.assertEqual(lookalike("amaz0n.co.uk"), "amazon")
+        self.assertEqual(lookalike("\u0430pple.com"), "punycode")  # Cyrillic a, not encoded
+        for real in ("amazon.co.uk", "support.apple.com", "mail.google.com", "paypal.com"):
+            with self.subTest(real=real):
+                self.assertIsNone(lookalike(real))
+
+    def test_link_mismatch_is_not_fooled_by_a_suffix_match(self):
+        names = {s.name for s in analyze("[paypal.com](https://evilpaypal.com/login)").signals}
+        self.assertIn("link_mismatch", names)
+        self.assertEqual(analyze("[paypal.com](https://www.paypal.com/help)").signals, [])
+
 
 if __name__ == "__main__":
     unittest.main()

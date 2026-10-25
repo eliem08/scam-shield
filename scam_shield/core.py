@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import os
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
@@ -33,6 +34,28 @@ BRANDS = [
     "facebook",
     "instagram",
 ]
+TWO_LEVEL_SUFFIXES = {
+    "co.uk",
+    "org.uk",
+    "ac.uk",
+    "com.au",
+    "net.au",
+    "co.nz",
+    "co.jp",
+    "com.br",
+    "co.in",
+    "com.mx",
+    "co.za",
+}
+ZERO_WIDTH = dict.fromkeys(map(ord, "\u00ad\u200b\u200c\u200d\u200e\u200f\u2060\ufeff"))
+QUOTES = str.maketrans({"\u2018": "'", "\u2019": "'", "\u02bc": "'", "\u201c": '"', "\u201d": '"'})
+
+
+def _normalise(text: str) -> str:
+    """Undo the cheap evasions: fullwidth/compat letters, zero-width splits, curly quotes (phones type them)."""
+    return unicodedata.normalize("NFKC", text).translate(ZERO_WIDTH).translate(QUOTES).casefold()
+
+
 SHORTENERS = {"bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd", "cutt.ly", "rb.gy"}
 
 RULES = [
@@ -104,10 +127,16 @@ HOMOGLYPHS = str.maketrans({"0": "o", "1": "l", "3": "e", "5": "s", "4": "a"})
 def lookalike(domain: str) -> str | None:
     """Return the brand a domain imitates, or None if it is the brand itself / unrelated."""
     domain = domain.lower().strip(".")
-    if domain.startswith("xn--") or ".xn--" in domain:
-        return "punycode"
+    if domain.startswith("xn--") or ".xn--" in domain or not domain.isascii():
+        return "punycode"  # unicode homoglyphs (Cyrillic a in apple) whether or not they were encoded
     parts = domain.split(".")
-    label = parts[-2] if len(parts) >= 2 else parts[0]
+    reg = 3 if ".".join(parts[-2:]) in TWO_LEVEL_SUFFIXES else 2  # amazon.co.uk -> label "amazon"
+    label = parts[-reg] if len(parts) >= reg else parts[0]
+    subdomains = parts[:-reg] if len(parts) > reg else []
+    if label not in BRANDS:
+        for sub in subdomains:  # paypal.com.secure-login.ru
+            if sub.replace("-", "") in BRANDS:
+                return sub.replace("-", "")
     normalised = label.translate(HOMOGLYPHS).replace("rn", "m").replace("-", "")
     for brand in BRANDS:
         if label == brand:
@@ -137,7 +166,7 @@ def _links(text):
 
 def analyze(text: str, sender: str | None = None) -> Verdict:
     signals = []
-    low = text.lower()
+    low = _normalise(text)
     for name, w, pattern in RULES:
         m = re.search(pattern, low)
         if m:
@@ -148,7 +177,7 @@ def analyze(text: str, sender: str | None = None) -> Verdict:
             signals.append(Signal("lookalike_domain", 35, f"{sender} imitates {brand}"))
     for shown, url in _links(text):
         host = (urlparse(url).hostname or "").lower()
-        if re.fullmatch(r"[\d.]+", host):
+        if re.fullmatch(r"\d{1,3}(?:\.\d{1,3}){3}", host) or ":" in host:  # IPv4, or IPv6 (only literals have a colon)
             signals.append(Signal("raw_ip_link", 20, url))
         if host in SHORTENERS:
             signals.append(Signal("shortened_link", 10, url))
@@ -157,7 +186,8 @@ def analyze(text: str, sender: str | None = None) -> Verdict:
             signals.append(Signal("lookalike_domain", 35, f"{host} imitates {brand}"))
         if shown and re.search(r"[\w-]+\.[a-z]{2,}", shown.lower()):
             shown_host = re.search(r"[\w.-]+\.[a-z]{2,}", shown.lower()).group(0)
-            if not host.endswith(shown_host.removeprefix("www.")):
+            shown_host = shown_host.removeprefix("www.")
+            if host != shown_host and not host.endswith("." + shown_host):  # evilpaypal.com is not paypal.com
                 signals.append(Signal("link_mismatch", 30, f"shows {shown_host}, goes to {host}"))
     # dedupe by name, keep strongest
     best = {}
