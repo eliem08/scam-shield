@@ -23,6 +23,7 @@ dev = ["ruff>=0.6"]
 
 [project.scripts]
 scam-shield = "scam_shield.__main__:main"
+scam-shield-web = "scam_shield.web:main"
 
 [project.urls]
 Repository = "https://github.com/eliem08/scam-shield"

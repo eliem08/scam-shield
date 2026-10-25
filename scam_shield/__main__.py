@@ -9,7 +9,7 @@ from .core import analyze, hash_safeword, verify_safeword
 STORE = pathlib.Path(os.environ.get("SCAM_SHIELD_HOME", pathlib.Path.home() / ".scam-shield")) / "safeword"
 
 
-def _run(argv=None):
+def build_parser():
     ap = argparse.ArgumentParser(prog="scam-shield")
     sub = ap.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("check")
@@ -19,6 +19,11 @@ def _run(argv=None):
     sw = sub.add_parser("safeword").add_subparsers(dest="sub", required=True)
     sw.add_parser("set").add_argument("word")
     sw.add_parser("verify").add_argument("word")
+    return ap
+
+
+def _run(argv=None):
+    ap = build_parser()
     a = ap.parse_args(argv)
 
     if a.cmd == "safeword":

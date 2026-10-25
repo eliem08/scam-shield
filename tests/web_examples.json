@@ -1,0 +1,15 @@
+[
+ {
+  "op": "check",
+  "payload": {
+   "text": "Grandma it's me, I'm in jail. Don't tell mom. Buy Apple gift cards now."
+  }
+ },
+ {
+  "op": "check",
+  "payload": {
+   "text": "Dinner at 6?",
+   "sender": "mom@example.com"
+  }
+ }
+]
