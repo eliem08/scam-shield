@@ -1,4 +1,4 @@
-"""Norton for AI scams: protect your parents from fake voices and emails."""
+"""Scam Shield: Protect your parents from fake voices, texts and phishing emails."""
 
 from .core import *
 

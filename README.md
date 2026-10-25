@@ -1,15 +1,44 @@
-# scam-shield
+<!-- sell-kit:start -->
+# Scam Shield
 
 [![CI](https://github.com/eliem08/scam-shield/actions/workflows/ci.yml/badge.svg)](https://github.com/eliem08/scam-shield/actions/workflows/ci.yml)
 
-> **Norton for AI scams** — protect your parents from fake voices and emails.
+> **Protect your parents from fake voices, texts and phishing emails.**
 
-Voice clones of a grandchild "in jail", perfectly written phishing emails,
-fake bank texts. AI made scams cheap and convincing. `scam-shield` is the
-detection engine behind a family protection app: paste or forward a message
-(or a call transcript) and get a plain-language verdict.
+**Who it's for:** Adult children worried about scams targeting their parents.
 
-## What the MVP does
+**The problem:** Grandparent and impersonation scams now use AI voices and perfect phishing, and older adults lose life savings to them.
+
+**What you get:** Explainable scam scoring for messages and call transcripts, look-alike domain and link checks, and a family safe word that only you know.
+
+## Quickstart
+
+Customers receive a release archive with the wheel and the examples. Python 3.10+ and no other dependencies.
+
+```bash
+pip install scam_shield-0.1.0-py3-none-any.whl
+scam-shield check "Grandma it's me, I'm in jail. Don't tell mom. Buy Apple gift cards now."
+scam-shield check "Dinner at 6?" --sender mom@example.com
+```
+
+## Pricing
+
+Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless noted.
+
+| Plan | Price | Includes |
+|---|---|---|
+| **Personal** | $4 per month | Unlimited message checks; Link and domain checks; Safe word |
+| **Family** | $9 per month | Up to 6 people; Shared safe word; Plain-language advice |
+| **Care Partner** | $199 per month | For banks, clinics and care homes; Bulk checks; Priority support |
+
+To start a trial or buy a plan, email **sales@YOUR-DOMAIN.com**.
+
+## Licence
+
+Proprietary. Copyright (c) 2026 eliem08. All rights reserved. Use requires a paid plan or an active trial; see [LICENSE](LICENSE).
+<!-- sell-kit:end -->
+
+## What it does
 
 - **Risk scoring** of emails, texts and call transcripts with explainable signals:
   - urgency & secrecy pressure ("act now", "don't tell anyone")

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scam Shield</title>
+<meta name="description" content="Protect your parents from fake voices, texts and phishing emails.">
+<style>
+  :root { --bg:#fbfaf7; --fg:#1c1b19; --muted:#5d5a54; --card:#ffffff; --line:#e4e0d8; --accent:#2f5d50; --accent-fg:#ffffff; --code:#f1eee8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#141412; --fg:#ecebe7; --muted:#a8a49c; --card:#1d1c1a; --line:#33312d; --accent:#7fc4ad; --accent-fg:#10201b; --code:#22211e; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 0 16px 64px; }
+  header { padding: 64px 0 40px; }
+  .brand { font-weight: 700; letter-spacing: .02em; color: var(--muted); text-transform: uppercase; font-size: 13px; }
+  h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 12px 0 16px; max-width: 18em; }
+  .lede { color: var(--muted); font-size: 18px; max-width: 40em; margin: 0 0 28px; }
+  .btn { display:inline-block; padding: 11px 18px; border-radius: 8px; border:1px solid var(--line); color: var(--fg); text-decoration:none; font-weight:600; }
+  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  section { padding: 32px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 22px; margin: 0 0 12px; }
+  .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .plan { background: var(--card); border:1px solid var(--line); border-radius: 12px; padding: 20px; display:flex; flex-direction:column; }
+  .plan h3 { margin:0; font-size:18px; }
+  .price { font-size: 30px; font-weight: 700; margin: 8px 0 12px; }
+  .price span { display:block; font-size: 14px; font-weight: 400; color: var(--muted); }
+  .plan ul { padding-left: 18px; margin: 0 0 20px; flex:1; }
+  pre { background: var(--code); border:1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; font-size: 14px; }
+  footer { color: var(--muted); font-size: 14px; padding-top: 32px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">Scam Shield</div>
+    <h1>Protect your parents from fake voices, texts and phishing emails.</h1>
+    <p class="lede">Explainable scam scoring for messages and call transcripts, look-alike domain and link checks, and a family safe word that only you know.</p>
+    <a class="btn primary" href="mailto:sales@YOUR-DOMAIN.com?subject=Scam Shield%20trial">Start a 14-day free trial</a>
+  </header>
+  <section>
+    <h2>Who it's for</h2>
+    <p>Adult children worried about scams targeting their parents.</p>
+    <h2>The problem</h2>
+    <p>Grandparent and impersonation scams now use AI voices and perfect phishing, and older adults lose life savings to them.</p>
+  </section>
+  <section>
+    <h2>Quickstart</h2>
+    <p>Python 3.10+, no other dependencies. Your release archive includes the wheel and examples.</p>
+    <pre><code>pip install scam_shield-0.1.0-py3-none-any.whl
+scam-shield check &quot;Grandma it&#x27;s me, I&#x27;m in jail. Don&#x27;t tell mom. Buy Apple gift cards now.&quot;
+scam-shield check &quot;Dinner at 6?&quot; --sender mom@example.com</code></pre>
+  </section>
+  <section>
+    <h2>Pricing</h2>
+    <p>Every plan starts with a 14-day free trial. Prices in USD.</p>
+    <div class="grid">
+      <article class="plan">
+        <h3>Personal</h3>
+        <p class="price">$4<span>per month</span></p>
+        <ul><li>Unlimited message checks</li><li>Link and domain checks</li><li>Safe word</li></ul>
+        <a class="btn primary" href="mailto:sales@YOUR-DOMAIN.com?subject=Scam Shield Personal">Start free trial</a>
+      </article>
+      <article class="plan">
+        <h3>Family</h3>
+        <p class="price">$9<span>per month</span></p>
+        <ul><li>Up to 6 people</li><li>Shared safe word</li><li>Plain-language advice</li></ul>
+        <a class="btn" href="mailto:sales@YOUR-DOMAIN.com?subject=Scam Shield Family">Start free trial</a>
+      </article>
+      <article class="plan">
+        <h3>Care Partner</h3>
+        <p class="price">$199<span>per month</span></p>
+        <ul><li>For banks, clinics and care homes</li><li>Bulk checks</li><li>Priority support</li></ul>
+        <a class="btn" href="mailto:sales@YOUR-DOMAIN.com?subject=Scam Shield Care Partner">Start free trial</a>
+      </article>
+    </div>
+  </section>
+  <footer>&copy; 2026 Scam Shield. All rights reserved. Questions: <a href="mailto:sales@YOUR-DOMAIN.com">sales@YOUR-DOMAIN.com</a></footer>
+</main>
+</body>
+</html>
