@@ -160,10 +160,15 @@ def run_op(op: dict, payload: dict, data_dir: pathlib.Path) -> dict:
         env = {k: v for k, v in os.environ.items() if k != "AGENT_ECONOMY_DEBUG"}
         env.update(PYTHONIOENCODING="utf-8", HOME=str(data_dir), USERPROFILE=str(data_dir))
         try:
+            # Never inherit the server's stdin: `check` with no text reads
+            # stdin, and a server subprocess that blocks on it hangs until
+            # the 30s timeout (which also breaks the rate-limit window).
+            # DEVNULL gives it an immediate EOF, as if the caller sent "".
             r = subprocess.run(
                 [sys.executable, "-m", PKG, *argv],
                 cwd=work,
                 env=env,
+                stdin=subprocess.DEVNULL,
                 capture_output=True,
                 text=True,
                 encoding="utf-8",

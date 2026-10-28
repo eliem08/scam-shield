@@ -34,5 +34,15 @@ class CliSmokeTests(unittest.TestCase):
                     out.getvalue().encode("cp1252")
 
 
+class EmptyInputTests(unittest.TestCase):
+    def test_check_empty_string_does_not_read_stdin(self):
+        # `check ""` used to fall through to sys.stdin.read() and hang.
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+            code = main(["check", ""])
+        self.assertEqual(code, 0)
+        self.assertIn("SAFE", out.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main()

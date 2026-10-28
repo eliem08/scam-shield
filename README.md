@@ -19,6 +19,8 @@ Customers receive a release archive with the wheel and the examples. Python 3.10
 pip install scam_shield-0.1.0-py3-none-any.whl
 scam-shield check "Grandma it's me, I'm in jail. Don't tell mom. Buy Apple gift cards now."
 scam-shield check "Dinner at 6?" --sender mom@example.com
+scam-shield check --file examples/phishing-email.txt --sender security@paypa1.com
+scam-shield check --file examples/safe-message.txt
 ```
 
 ## Web app and API
@@ -47,7 +49,7 @@ To sell self-serve, set four variables and point a Stripe webhook at `https://<y
 |---|---|
 | `STRIPE_SECRET_KEY` | `sk_live_...` |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_...` |
-| `STRIPE_PRICES` | `team=price_123,business=price_456` |
+| `STRIPE_PRICES` | `personal=price_123,family=price_456,care-partner=price_789` |
 | `PUBLIC_URL` | `https://scam-shield.example.com` |
 
 Buyers pick a plan on `/pricing`, pay on Stripe Checkout and see their API key once on the success page. Cancelling the subscription revokes the key. A selling server always requires a key.
@@ -58,11 +60,13 @@ Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless
 
 | Plan | Price | Includes |
 |---|---|---|
-| **Personal** | $4 per month | Unlimited message checks; Link and domain checks; Safe word |
-| **Family** | $9 per month | Up to 6 people; Shared safe word; Plain-language advice |
-| **Care Partner** | $199 per month | For banks, clinics and care homes; Bulk checks; Priority support |
+| **Personal** | $4 per month | Message checks; Link and domain checks; Safe word |
+| **Family** | $9 per month | Everything in Personal; Shared safe word; Plain-language advice |
+| **Care Partner** | $199 per month | Everything in Family; Priority support |
 
 To start a trial or buy a plan, [request access](https://github.com/eliem08/scam-shield/issues/new?title=Scam%20Shield%20trial&labels=sales).
+
+Plan note, owner decision on merge: there is no feature gating by plan in the code — every API key unlocks the same software (check, safe word). Family's "up to 6 people" cap is not enforced (there are no per-person accounts), and Care Partner's bulk checks are not a built-in endpoint (a buyer loops the CLI/API per message); both have been removed from the sales copy. Care Partner differs by human priority support, not by gated features.
 
 ## Licence
 
@@ -107,6 +111,7 @@ python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\act
 pip install -e ".[dev]"
 python -m unittest discover -s tests -t .           # unit + CLI smoke tests
 ruff check . && ruff format --check .               # lint + format
+python -m pip wheel . --no-deps -w dist            # customer wheel, as in Quickstart
 ```
 
 ```

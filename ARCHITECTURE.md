@@ -43,3 +43,23 @@ alerts. Call screening uses streaming STT with rolling-window scoring and a prom
 ## 6. Risks
 False positives erode trust, so thresholds are tuned on a labelled corpus. Lexicons need i18n.
 The adversary adapts, so the lexicon must update without a release (remote config).
+
+## 7. Limitations (sell-ready audit, 2026-10-28)
+- No feature gating by plan: every API key unlocks the same software. Family's
+  6-person cap and Care Partner's bulk checks are not implemented and were
+  removed from sales copy; Care Partner differs by human priority support.
+- Scores are rule-based, not a guarantee: a new scam phrasing the lexicon does
+  not cover will score low, and a benign message stacking several signals can
+  score high. Verdicts are advice, not a fraud determination.
+- The hosted API previously hung on a `check` with no text: the CLI falls back
+  to stdin, and the web subprocess inherited the server's stdin. Fixed in this
+  run by giving the subprocess DEVNULL stdin, and `check ""` now means an empty
+  message instead of "read stdin".
+- Docker build and a live Render/Fly deployment were not verified in the audit
+  environment (no Docker binary there); Dockerfile, render.yaml, and fly.toml are
+  the same template shape as vibe-lube, but a deployment claim remains
+  "not verified" until one is made.
+- Stripe prices were not verified against a live Stripe account in this run;
+  checkout and revocation are covered in tests with mocked Stripe calls, and the
+  README example now uses personal/family/care-partner plan keys to match the
+  plan names.

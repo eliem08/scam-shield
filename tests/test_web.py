@@ -135,6 +135,18 @@ class WebAppTests(unittest.TestCase):
                 srv.shutdown()
                 srv.server_close()
 
+    def test_api_check_with_no_text_returns_at_once(self):
+        # Before the DEVNULL fix, an API check with no text inherited the
+        # server's stdin and hung until the 30s subprocess timeout.
+        import time
+
+        op = SPEC["ops"][0]["id"]
+        started = time.monotonic()
+        status, _, body = self.call(f"/api/{op}", {})
+        self.assertEqual(status, 200, body)
+        self.assertLess(time.monotonic() - started, 10)
+        self.assertIn("SAFE", json.loads(body).get("stdout", ""))
+
     def test_created_keys_are_hashed_and_revocable(self):
         with tempfile.TemporaryDirectory() as t:
             gate = web.Gate(pathlib.Path(t))

@@ -43,7 +43,14 @@ def _run(argv=None):
         )
         return 0 if ok else 2
 
-    text = pathlib.Path(a.file).read_text(encoding="utf-8-sig") if a.file else (a.text or sys.stdin.read())
+    # Empty string is a real (empty) message, not "no message": only read
+    # stdin when no text argument was given at all, otherwise `check ""`
+    # hangs waiting for piped input that will never arrive.
+    text = (
+        pathlib.Path(a.file).read_text(encoding="utf-8-sig")
+        if a.file
+        else (a.text if a.text is not None else sys.stdin.read())
+    )
     v = analyze(text, a.sender)
     print(f"Verdict: {v.label.upper()} (risk {v.score}/100)")
     for s in v.signals:
