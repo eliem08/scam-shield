@@ -83,4 +83,24 @@ SPEC = {
             "id": "safeword-verify",
         },
     ],
+    "plans": [
+        {
+            "key": "personal",
+            "name": "Personal",
+            "price": "$4 per month",
+            "features": ["Unlimited message checks", "Link and domain checks", "Safe word"],
+        },
+        {
+            "key": "family",
+            "name": "Family",
+            "price": "$9 per month",
+            "features": ["Up to 6 people", "Shared safe word", "Plain-language advice"],
+        },
+        {
+            "key": "care-partner",
+            "name": "Care Partner",
+            "price": "$199 per month",
+            "features": ["For banks, clinics and care homes", "Hosted API for bulk checks", "Priority support"],
+        },
+    ],
 }
