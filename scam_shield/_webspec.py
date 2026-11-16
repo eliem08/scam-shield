@@ -2,7 +2,7 @@
 
 SPEC = {
     "name": "Scam Shield",
-    "tagline": "Protect your parents from fake voices, texts and phishing emails.",
+    "tagline": "Protect your parents from scam texts, phishing emails and phone-call scripts.",
     "cli": "scam-shield",
     "state": {},
     "ops": [

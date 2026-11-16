@@ -1,4 +1,4 @@
-"""Scam Shield: Protect your parents from fake voices, texts and phishing emails."""
+"""Scam Shield: Protect your parents from scam texts, phishing emails and phone-call scripts."""
 
 from .core import *
 

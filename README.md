@@ -3,7 +3,7 @@
 
 [![CI](https://github.com/eliem08/scam-shield/actions/workflows/ci.yml/badge.svg)](https://github.com/eliem08/scam-shield/actions/workflows/ci.yml)
 
-> **Protect your parents from fake voices, texts and phishing emails.**
+> **Protect your parents from scam texts, phishing emails and phone-call scripts.**
 
 **Who it's for:** Adult children worried about scams targeting their parents.
 

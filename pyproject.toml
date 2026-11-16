@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "scam-shield"
 version = "0.1.0"
-description = "Protect your parents from fake voices, texts and phishing emails."
+description = "Protect your parents from scam texts, phishing emails and phone-call scripts."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Proprietary" }
