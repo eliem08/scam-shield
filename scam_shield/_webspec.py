@@ -47,6 +47,64 @@ SPEC = {
             "id": "check",
         },
         {
+            "prefix": ["report"],
+            "title": "Teach scam-shield: mark a message as a scam or as safe",
+            "fields": [
+                {
+                    "dest": "text",
+                    "flag": None,
+                    "kind": "text",
+                    "required": True,
+                    "choices": None,
+                    "default": None,
+                    "help": None,
+                    "scope": "op",
+                    "append": False,
+                },
+                {
+                    "dest": "scam",
+                    "flag": "--scam",
+                    "kind": "bool",
+                    "required": False,
+                    "choices": None,
+                    "default": None,
+                    "help": None,
+                    "scope": "op",
+                    "append": False,
+                },
+                {
+                    "dest": "safe",
+                    "flag": "--safe",
+                    "kind": "bool",
+                    "required": False,
+                    "choices": None,
+                    "default": None,
+                    "help": None,
+                    "scope": "op",
+                    "append": False,
+                },
+            ],
+            "id": "report",
+        },
+        {
+            "prefix": ["learn"],
+            "title": "Teach from a CSV of labelled messages (text, label = scam/safe)",
+            "fields": [
+                {
+                    "dest": "file",
+                    "flag": None,
+                    "kind": "file",
+                    "required": True,
+                    "choices": None,
+                    "default": None,
+                    "help": None,
+                    "scope": "op",
+                    "append": False,
+                }
+            ],
+            "id": "learn",
+        },
+        {
             "prefix": ["safeword", "set"],
             "title": "Safeword set",
             "fields": [
@@ -100,7 +158,12 @@ SPEC = {
             "key": "care-partner",
             "name": "Care Partner",
             "price": "$199 per month",
-            "features": ["For banks, clinics and care homes", "Hosted API for bulk checks", "Priority support"],
+            "features": [
+                "For banks, clinics and care homes",
+                "Learns from your reported scams",
+                "Hosted API for bulk checks",
+                "Priority support",
+            ],
         },
     ],
 }

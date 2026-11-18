@@ -93,6 +93,7 @@ ADVICE = {
     "credential_request": "Never share passwords or one-time codes. Your bank will never ask for them.",
     "lookalike_domain": "The sender's address imitates a real brand. Don't click links; go to the official site directly.",
     "link_mismatch": "The link goes somewhere other than what it says. Don't click it.",
+    "learned_pattern": "This reads like messages your family or team already reported as scams.",
 }
 
 
@@ -164,7 +165,8 @@ def _links(text):
             yield None, m.group(5)
 
 
-def analyze(text: str, sender: str | None = None) -> Verdict:
+def analyze(text: str, sender: str | None = None, model=None) -> Verdict:
+    """model: a trained learn.Model; it can add a learned_pattern signal, never remove a rule's warning."""
     signals = []
     low = _normalise(text)
     for name, w, pattern in RULES:
@@ -189,6 +191,12 @@ def analyze(text: str, sender: str | None = None) -> Verdict:
             shown_host = shown_host.removeprefix("www.")
             if host != shown_host and not host.endswith("." + shown_host):  # evilpaypal.com is not paypal.com
                 signals.append(Signal("link_mismatch", 30, f"shows {shown_host}, goes to {host}"))
+    if model is not None:
+        from .learn import learned_signal
+
+        hit = learned_signal(model, text)
+        if hit:
+            signals.append(Signal("learned_pattern", *hit))
     # dedupe by name, keep strongest
     best = {}
     for s in signals:

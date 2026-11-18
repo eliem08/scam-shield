@@ -9,7 +9,7 @@
 
 **The problem:** Grandparent and impersonation scams now use AI voices and perfect phishing, and older adults lose life savings to them.
 
-**What you get:** Explainable scam scoring for messages and call transcripts, look-alike domain and link checks, and a family safe word that only you know.
+**What you get:** Explainable scam scoring for messages and call transcripts, look-alike domain and link checks, learning from the scams your family reports, and a family safe word that only you know.
 
 ## Quickstart
 
@@ -33,7 +33,7 @@ docker build -t scam-shield . && docker run -p 8000:8000 -e API_KEYS=sk_... -v s
 
 Every API call needs `Authorization: Bearer <key>` once any key exists; a server on a public address refuses to start without one. Calls are rate-limited per key (60/min, `--rate`) and metered: `scam-shield-web usage` prints calls per key for billing.
 
-Endpoints: `POST /api/check`, `POST /api/safeword-set`, `POST /api/safeword-verify`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
+Endpoints: `POST /api/check`, `POST /api/report`, `POST /api/learn`, `POST /api/safeword-set`, `POST /api/safeword-verify`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
 Files are sent as `{"name": ..., "content": ...}`, folders as `{"files": [...]}` or a base64 zip.
 
 ## Deploy and sell
@@ -61,7 +61,7 @@ Monthly plans start with a 14-day free trial. Prices in USD, billed monthly unle
 |---|---|---|
 | **Personal** | $4 per month | Unlimited message checks; Link and domain checks; Safe word |
 | **Family** | $9 per month | Up to 6 people; Shared safe word; Plain-language advice |
-| **Care Partner** | $199 per month | For banks, clinics and care homes; Hosted API for bulk checks; Priority support |
+| **Care Partner** | $199 per month | For banks, clinics and care homes; Learns from your reported scams; Hosted API for bulk checks; Priority support |
 
 To start a trial or buy a plan, [request access](https://github.com/eliem08/scam-shield/issues/new?title=Scam%20Shield%20trial&labels=sales).
 
@@ -86,6 +86,28 @@ Proprietary. Copyright (c) 2026 eliem08. All rights reserved. Use requires a pai
   - links whose visible text doesn't match the real host, raw-IP links, URL shorteners
 - Verdict `safe / suspicious / likely scam` + **what to do next** in plain English
 - **Family safe word**: store a salted hash; verify a caller who claims to be family
+- **Learns from what you report**: mark messages with `report "..." --scam` (or `--safe`), or teach from a CSV
+  with `learn`. Once it has 10 of each kind, messages that read like reported scams get a `learned_pattern`
+  warning, which covers scams the rules miss, such as fake parcel fees, unpaid tolls, job offers and investment
+  pitches. Learning can only add warnings; it can never talk the rules out of one, because a missed scam costs
+  more than a false alarm. Only word counts are stored, never the messages.
+
+## Learning from reports
+
+```bash
+scam-shield report "Unpaid toll balance of $6.99, pay at toll-pay-center.net" --scam
+scam-shield learn examples/reported.csv      # columns: text, label (scam/safe; spam/ham also accepted)
+```
+
+`learn` prints how many scams the rules alone catch and how many rules plus learning catch, and how many safe
+messages each flags. These are measured on your file with 5-fold cross-validation, so each message is judged by a
+model that never saw it.
+
+`examples/reported.csv` is synthetic, built from templates written for this project. Because held-out messages
+share templates with training ones, it overstates what learning achieves on real messages. Measure on your own
+reports.
+
+Messages are still read as text: a phone call needs a transcript first.
 
 ## Quickstart
 
@@ -94,6 +116,7 @@ pip install -e .
 scam-shield check "Grandma it's me, I'm in jail, please don't tell mom. Buy $500 of Apple gift cards"
 scam-shield check --file email.txt --sender security@paypa1.com
 scam-shield safeword set "purple pancakes" && scam-shield safeword verify "purple pancakes"
+scam-shield learn examples/reported.csv
 ```
 
 ## Roadmap
